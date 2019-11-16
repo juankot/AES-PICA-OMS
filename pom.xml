@@ -6,7 +6,7 @@
 
     <groupId>co.edu.javeriana.pica.kallsonys</groupId>
     <artifactId>OMS</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
 
     <parent>
@@ -52,6 +52,16 @@
             <version>3.4.1</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>
