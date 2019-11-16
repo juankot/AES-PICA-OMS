@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class Type {
 
-    @NotNull(message = "El id es obligatorio")
+    @NotNull(message = "El id del tipo es obligatorio")
     private Integer id;
 
     private String name;

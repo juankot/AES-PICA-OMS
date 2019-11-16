@@ -14,8 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,11 +44,11 @@ public class OrderBusiness {
         }
 
         Order order = new Order();
-        order.setDate(new Date());
+        order.setDate(LocalDate.now());
 
         order.setStatus(new Status());
         order.getStatus().setId(OrderStatusEnum.EN_VALIDACION.getId());
-        order.setStatusDate(new Date());
+        order.setStatusDate(LocalDate.now());
 
         order.setComments(orderDTO.getComments());
 
@@ -126,7 +126,7 @@ public class OrderBusiness {
     }
 
     public List<co.edu.javeriana.pica.kallsonys.dto.Order> ordersPaymentRankingByStatusBetweenDates(
-            Integer statusId, Date startDate, Date endDate, String ordering, int page, int results) {
+            Integer statusId, LocalDate startDate, LocalDate endDate, String ordering, int page, int results) {
         Sort sort = null;
         if (ordering == null || ordering.isEmpty() || ordering.toUpperCase().equals("ASC")
                 || !ordering.toUpperCase().equals("DESC")) {

@@ -1,12 +1,12 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Status {
 
     private Integer id;
     private String name;
-    private Date date;
+    private LocalDate date;
 
     public Integer getId() {
         return id;
@@ -24,11 +24,11 @@ public class Status {
         this.name = name;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

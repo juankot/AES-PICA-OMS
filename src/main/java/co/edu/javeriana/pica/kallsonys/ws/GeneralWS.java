@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,16 @@ public class GeneralWS {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public GenericResponse handleArgumentValidationExceptions(MethodArgumentTypeMismatchException ex) {
+        return new GenericResponse(
+                2,
+                "El PathParam '" + ex.getName() +
+                        "' con valor '" + ex.getValue() +
+                        "' debe ser de tipo " + ex.getRequiredType().getName());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(KallSonysException.class)
     public GenericResponse badRequest(KallSonysException ex) {
         return new GenericResponse(3, ex.getMessage());
@@ -42,7 +53,7 @@ public class GeneralWS {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public GenericResponse handleValidationExceptions(Exception ex) {
+    public GenericResponse handleOtherExceptions(Exception ex) {
         ex.printStackTrace();
         return new GenericResponse(1, ex.getMessage());
     }

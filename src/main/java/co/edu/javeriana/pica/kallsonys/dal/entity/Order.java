@@ -2,7 +2,7 @@ package co.edu.javeriana.pica.kallsonys.dal.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name = "ks_order")
@@ -20,7 +20,7 @@ public class Order {
     private Long id;
 
     @Column(name = "order_date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     private String comments;
 
@@ -55,7 +55,7 @@ public class Order {
     private Status status;
 
     @Column(name = "status_date")
-    private Date statusDate;
+    private LocalDate statusDate;
 
     public Long getId() {
         return id;
@@ -65,11 +65,11 @@ public class Order {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -121,11 +121,11 @@ public class Order {
         this.status = status;
     }
 
-    public Date getStatusDate() {
+    public LocalDate getStatusDate() {
         return statusDate;
     }
 
-    public void setStatusDate(Date statusDate) {
+    public void setStatusDate(LocalDate statusDate) {
         this.statusDate = statusDate;
     }
 }

@@ -7,7 +7,7 @@ import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -38,7 +38,7 @@ public class OrderFacade {
     }
 
     public List<Order> ordersPaymentRankingByStatusBetweenDates(
-            Integer statusId, Date startDate, Date endDate, String ordering, int page, int results) {
+            Integer statusId, LocalDate startDate, LocalDate endDate, String ordering, int page, int results) {
         return orderBusiness.ordersPaymentRankingByStatusBetweenDates(
                 statusId, startDate, endDate, ordering, page, results);
     }

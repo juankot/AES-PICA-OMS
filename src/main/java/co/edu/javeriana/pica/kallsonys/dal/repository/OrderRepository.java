@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
@@ -25,5 +25,5 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
     List<Order> findAllByStatusId(Integer statusId, Pageable pageable);
 
-    List<Order> findByStatusIdAndDateBetween(Integer statusId, Date start, Date end, Pageable pageable);
+    List<Order> findByStatusIdAndDateBetween(Integer statusId, LocalDate start, LocalDate end, Pageable pageable);
 }

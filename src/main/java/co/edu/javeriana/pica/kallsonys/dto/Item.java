@@ -7,13 +7,13 @@ public class Item {
 
     private Long id;
 
-    @NotNull(message = "El precio es obligatorio")
+    @NotNull(message = "El precio del ítem es obligatorio")
     private BigDecimal price;
 
-    @NotNull(message = "La cantidad es obligatoria")
+    @NotNull(message = "La cantidad del ítem es obligatoria")
     private Integer quantity;
 
-    @NotNull(message = "El código del producto es obligatorio")
+    @NotNull(message = "El código de producto del ítem es obligatorio")
     private String productCode;
 
     public Long getId() {

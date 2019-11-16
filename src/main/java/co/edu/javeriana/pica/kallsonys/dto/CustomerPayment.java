@@ -1,12 +1,12 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class CustomerPayment {
 
     private Customer customer;
-    private Date date;
+    private LocalDate date;
     private BigDecimal price;
 
     public Customer getCustomer() {
@@ -17,11 +17,11 @@ public class CustomerPayment {
         this.customer = customer;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

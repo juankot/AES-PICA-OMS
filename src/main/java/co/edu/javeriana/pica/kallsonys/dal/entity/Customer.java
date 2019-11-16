@@ -7,8 +7,8 @@ import java.util.List;
 @Entity(name = "customer")
 @Table(
         indexes = {
-                @Index(name = "cust_ident_card_idx", columnList = "ident_card_type_id, identification_card"),
-                @Index(name = "cust_email_idx", columnList = "email")
+                @Index(name = "cust_ident_card_idx", columnList = "ident_card_type_id, identification_card")
+//                , @Index(name = "cust_email_idx", columnList = "email")
         }
 )
 public class Customer {
@@ -27,9 +27,9 @@ public class Customer {
     @Column(nullable = false, length = 40)
     private String phone;
 
-    @Email
-    @Column(nullable = false, length = 40)
-    private String email;
+//    @Email
+//    @Column(nullable = false, length = 40)
+//    private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
@@ -85,13 +85,13 @@ public class Customer {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public IdentificationCardType getIdentificationCardType() {
         return identificationCardType;

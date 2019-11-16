@@ -1,23 +1,15 @@
 package co.edu.javeriana.pica.kallsonys.ws;
 
-import co.edu.javeriana.pica.kallsonys.dto.GenericResponse;
-import co.edu.javeriana.pica.kallsonys.dto.MonthlyOrderReport;
 import co.edu.javeriana.pica.kallsonys.dto.Order;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.OrderFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/order")
@@ -41,7 +33,7 @@ public class OrderWS extends GeneralWS {
         return ResponseEntity.ok(orderFacade.findOrdersByProductCode(productCode));
     }
 
-    @GetMapping("/monthlyReport/{year}/{month}/{statusId}")
+    @GetMapping("/monthlyReportByStatus/{year}/{month}/{statusId}")
     public ResponseEntity findMonthlyReportByYearMonthAndStatus(
             @PathVariable("year") Integer year,
             @PathVariable("month") Integer month,
@@ -61,8 +53,8 @@ public class OrderWS extends GeneralWS {
     @GetMapping("/paymentRanking/{statusId}")
     public ResponseEntity ordersPaymentRankingByStatusBetweenDates(
             @PathVariable Integer statusId,
-            @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date start,
-            @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date end,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end,
             @RequestParam String ordering,
             @RequestParam int page,
             @RequestParam int results) {

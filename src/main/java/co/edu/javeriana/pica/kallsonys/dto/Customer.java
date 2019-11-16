@@ -3,33 +3,40 @@ package co.edu.javeriana.pica.kallsonys.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class Customer {
 
     private Long id;
 
-    @NotNull(message = "El nombre es obligatorio")
-    @NotBlank(message = "El nombre es obligatorio")
+    @NotNull(message = "El nombre del cliente es obligatorio")
+    @NotBlank(message = "El nombre del cliente es obligatorio")
+    @Size(max = 40, message = "El nombre del cliente debe tener máximo 40 caracteres")
     private String firstName;
 
-    @NotNull(message = "El apellido es obligatorio")
-    @NotBlank(message = "El apellido es obligatorio")
+    @NotNull(message = "El apellido del cliente es obligatorio")
+    @NotBlank(message = "El apellido del cliente es obligatorio")
+    @Size(max = 40, message = "El apellido del cliente debe tener máximo 40 caracteres")
     private String lastName;
 
-    @NotNull(message = "El teléfono es obligatorio")
-    @NotBlank(message = "El teléfono es obligatorio")
+    @NotNull(message = "El teléfono del cliente es obligatorio")
+    @NotBlank(message = "El teléfono del cliente es obligatorio")
+    @Size(max = 40, message = "El teléfono del cliente debe tener máximo 40 caracteres")
     private String phoneNumber;
 
-    @NotNull(message = "El correo es obligatorio")
-    @NotBlank(message = "El correo es obligatorio")
-    @Email(message = "El formato del correo no es válido")
+    @NotNull(message = "El correo del cliente es obligatorio")
+    @NotBlank(message = "El correo del cliente es obligatorio")
+    @Email(message = "El formato del correo del cliente no es válido")
+    @Size(max = 40, message = "El correo del cliente debe tener máximo 40 caracteres")
     private String email;
 
-    @NotNull(message = "El tipo de identificación es obligatorio")
+    @NotNull(message = "El código del tipo de identificación del cliente es obligatorio")
+    @Size(max = 3, message = "El código del tipo de identificación del cliente debe tener máximo 3 caracteres")
     private String identificationCardType;
 
-    @NotNull(message = "El número de identificación es obligatorio")
-    @NotBlank(message = "El número de identificación es obligatorio")
+    @NotNull(message = "El número de identificación del cliente es obligatorio")
+    @NotBlank(message = "El número de identificación del cliente es obligatorio")
+    @Size(max = 40, message = "El cnúmero de identificación del cliente debe tener máximo 40 caracteres")
     private String identificationCard;
 
     private Type type;

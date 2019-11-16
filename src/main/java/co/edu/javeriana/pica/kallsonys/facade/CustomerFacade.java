@@ -7,7 +7,7 @@ import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -39,11 +39,11 @@ public class CustomerFacade {
                 identificationCard);
     }
 
-    public List<Customer> findByProductCode(String productCode) throws KallSonysException {
-        return customerBusiness.findByProductCode(productCode);
+    public List<Customer> findByProductCode(String productCode, String ordering, int page, int results) throws KallSonysException {
+        return customerBusiness.findByProductCode(productCode, ordering, page, results);
     }
 
-    public List<CustomerPayment> customersPaymentRankingBetweenDates(Date startDate, Date endDate) {
+    public List<CustomerPayment> customersPaymentRankingBetweenDates(LocalDate startDate, LocalDate endDate) {
         return customerBusiness.customersPaymentRankingBetweenDates(startDate, endDate);
     }
 

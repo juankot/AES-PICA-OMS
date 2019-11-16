@@ -9,11 +9,17 @@ import co.edu.javeriana.pica.kallsonys.dal.repository.IdentificationCardTypeRepo
 import co.edu.javeriana.pica.kallsonys.enums.CustomerTypeEnum;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,15 +47,15 @@ public class CustomerBusiness {
             throw new KallSonysException("Ya existe un Cliente con el Tipo y Número de Identificación proporcionados.");
          }
 
-         if (customerRepository.findCustomerByEmail(customerDTO.getEmail())!= null) {
-             throw new KallSonysException("Ya existe un Cliente con el Email proporcionado.");
-         }
+//         if (customerRepository.findCustomerByEmail(customerDTO.getEmail())!= null) {
+//             throw new KallSonysException("Ya existe un Cliente con el Email proporcionado.");
+//         }
 
         Customer customer = new Customer();
         customer.setFirstName(customerDTO.getFirstName());
         customer.setLastName(customerDTO.getLastName());
         customer.setPhone(customerDTO.getPhoneNumber());
-        customer.setEmail(customerDTO.getEmail());
+//        customer.setEmail(customerDTO.getEmail());
         customer.setIdentificationCardType(identificationCardTypeOptional.get());
         customer.setIdentificationCard(customerDTO.getIdentificationCard());
         customer.setType(new CustomerType());
@@ -129,22 +135,29 @@ public class CustomerBusiness {
         return customerEntityToCustomerDTO(customer);
     }
 
-    public List<co.edu.javeriana.pica.kallsonys.dto.Customer> findByProductCode(String productCode) throws KallSonysException {
+    public List<co.edu.javeriana.pica.kallsonys.dto.Customer> findByProductCode(
+            String productCode, String ordering, int page, int results) throws KallSonysException {
         if (productCode == null || productCode.isEmpty()) {
             throw new KallSonysException("El código del producto es obligatorio.");
         }
 
-        List<co.edu.javeriana.pica.kallsonys.dto.Customer> customerDTOs = new ArrayList<>();
-        for (Customer customer : customerRepository.findByProductCode(productCode)) {
-            customerDTOs.add(customerEntityToCustomerDTO(customer));
+        Sort sort;
+        if (ordering == null || ordering.isEmpty() || ordering.toUpperCase().equals("ASC")
+                || !ordering.toUpperCase().equals("DESC")) {
+            sort = Sort.by(Arrays.asList(Sort.Order.asc("C.IDENT_CARD_TYPE_ID"), Sort.Order.asc("C.IDENTIFICATION_CARD")));
+        } else {
+            sort = Sort.by(Arrays.asList(Sort.Order.desc("C.IDENT_CARD_TYPE_ID"), Sort.Order.desc("C.IDENTIFICATION_CARD")));
+        }
+        Pageable sortedByIdentCardType = PageRequest.of(page, results, sort);
 
+        List<co.edu.javeriana.pica.kallsonys.dto.Customer> customerDTOs = new ArrayList<>();
+        for (Customer customer : customerRepository.findByProductCode(productCode, sortedByIdentCardType)) {
+            customerDTOs.add(customerEntityToCustomerDTO(customer));
         }
         return customerDTOs;
     }
 
-    public List<co.edu.javeriana.pica.kallsonys.dto.CustomerPayment> customersPaymentRankingBetweenDates(Date startDate, Date endDate) {
-        System.out.println(startDate);
-        System.out.println(endDate);
+    public List<co.edu.javeriana.pica.kallsonys.dto.CustomerPayment> customersPaymentRankingBetweenDates(LocalDate startDate, LocalDate endDate) {
         List<Object[]> ranking = customerRepository.customersPaymentRankingBetweenDates(startDate, endDate);
         List<co.edu.javeriana.pica.kallsonys.dto.CustomerPayment> customerPaymentRanking = new ArrayList<>();
         for (Object[] reg : ranking) {
@@ -153,7 +166,7 @@ public class CustomerBusiness {
             customerPayment.setCustomer(
                     customerEntityToCustomerDTO(
                             customerRepository.findById(((BigDecimal)reg[0]).longValue()).get()));
-            customerPayment.setDate((Date)reg[1]);
+            customerPayment.setDate(((Timestamp)reg[1]).toLocalDateTime().toLocalDate());
             customerPayment.setPrice((BigDecimal)reg[2]);
             customerPaymentRanking.add(customerPayment);
         }
@@ -165,7 +178,7 @@ public class CustomerBusiness {
         customerDTO.setId(customer.getId());
         customerDTO.setFirstName(customer.getFirstName());
         customerDTO.setLastName(customer.getLastName());
-        customerDTO.setEmail(customer.getEmail());
+//        customerDTO.setEmail(customer.getEmail());
         customerDTO.setPhoneNumber(customer.getPhone());
         customerDTO.setIdentificationCardType(customer.getIdentificationCardType().getId());
         customerDTO.setIdentificationCard(customer.getIdentificationCard());
