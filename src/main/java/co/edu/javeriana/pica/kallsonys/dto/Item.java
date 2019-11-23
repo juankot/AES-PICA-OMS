@@ -1,28 +1,23 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Item {
 
-    private Long id;
-
     @NotNull(message = "El precio del ítem es obligatorio")
+    @JsonProperty("Price")
     private BigDecimal price;
 
     @NotNull(message = "La cantidad del ítem es obligatoria")
+    @JsonProperty("Quantity")
     private Integer quantity;
 
     @NotNull(message = "El código de producto del ítem es obligatorio")
+    @JsonProperty("ProductCode")
     private String productCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public BigDecimal getPrice() {
         return price;

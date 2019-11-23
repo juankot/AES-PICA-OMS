@@ -1,5 +1,7 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -7,38 +9,46 @@ import javax.validation.constraints.Size;
 
 public class Customer {
 
+    @JsonProperty("Id")
     private Long id;
 
     @NotNull(message = "El nombre del cliente es obligatorio")
     @NotBlank(message = "El nombre del cliente es obligatorio")
     @Size(max = 40, message = "El nombre del cliente debe tener máximo 40 caracteres")
+    @JsonProperty("FirstName")
     private String firstName;
 
     @NotNull(message = "El apellido del cliente es obligatorio")
     @NotBlank(message = "El apellido del cliente es obligatorio")
     @Size(max = 40, message = "El apellido del cliente debe tener máximo 40 caracteres")
+    @JsonProperty("LastName")
     private String lastName;
 
     @NotNull(message = "El teléfono del cliente es obligatorio")
     @NotBlank(message = "El teléfono del cliente es obligatorio")
     @Size(max = 40, message = "El teléfono del cliente debe tener máximo 40 caracteres")
+    @JsonProperty("PhoneNumber")
     private String phoneNumber;
 
     @NotNull(message = "El correo del cliente es obligatorio")
     @NotBlank(message = "El correo del cliente es obligatorio")
     @Email(message = "El formato del correo del cliente no es válido")
     @Size(max = 40, message = "El correo del cliente debe tener máximo 40 caracteres")
+    @JsonProperty("Email")
     private String email;
 
     @NotNull(message = "El código del tipo de identificación del cliente es obligatorio")
     @Size(max = 3, message = "El código del tipo de identificación del cliente debe tener máximo 3 caracteres")
+    @JsonProperty("IdentificationCardType")
     private String identificationCardType;
 
     @NotNull(message = "El número de identificación del cliente es obligatorio")
     @NotBlank(message = "El número de identificación del cliente es obligatorio")
     @Size(max = 40, message = "El cnúmero de identificación del cliente debe tener máximo 40 caracteres")
+    @JsonProperty("IdentificationCard")
     private String identificationCard;
 
+    @JsonProperty("Type")
     private Type type;
 
     public Long getId() {

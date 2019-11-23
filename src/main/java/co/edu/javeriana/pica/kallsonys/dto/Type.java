@@ -1,12 +1,16 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 
 public class Type {
 
     @NotNull(message = "El id del tipo es obligatorio")
+    @JsonProperty("Id")
     private Integer id;
 
+    @JsonProperty("Name")
     private String name;
 
     public Integer getId() {

@@ -1,10 +1,15 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class MonthlyOrderReport {
 
+    @JsonProperty("Quantity")
     private Integer quantity;
+
+    @JsonProperty("Total")
     private BigDecimal total;
 
     public MonthlyOrderReport() {

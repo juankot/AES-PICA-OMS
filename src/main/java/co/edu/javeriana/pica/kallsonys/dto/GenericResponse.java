@@ -1,8 +1,13 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GenericResponse {
 
+    @JsonProperty("Code")
     private Integer code;
+
+    @JsonProperty("Description")
     private String description;
 
     public GenericResponse(Integer code, String description) {

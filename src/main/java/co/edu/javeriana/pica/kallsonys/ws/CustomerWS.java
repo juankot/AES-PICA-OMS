@@ -1,11 +1,13 @@
 package co.edu.javeriana.pica.kallsonys.ws;
 
 import co.edu.javeriana.pica.kallsonys.dto.Customer;
+import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
 import co.edu.javeriana.pica.kallsonys.dto.Type;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.CustomerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/customer")
 public class CustomerWS extends GeneralWS {
 
@@ -25,14 +28,14 @@ public class CustomerWS extends GeneralWS {
         return ResponseEntity.ok(customerFacade.createCustomer(customer));
     }
 
-    @PatchMapping(path = "/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity modify(@PathVariable("id") @NotBlank Long id, @RequestBody Customer customer) throws KallSonysException {
         customer.setId(id);
         customerFacade.updateCustomer(customer);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(path = "/updateType/{id}")
+    @PutMapping(path = "/updateType/{id}")
     public ResponseEntity updateType(@PathVariable("id") @NotBlank Long id, @Valid @RequestBody Type customerType) throws KallSonysException {
         customerFacade.updateType(id, customerType.getId());
         return ResponseEntity.ok().build();
@@ -58,7 +61,10 @@ public class CustomerWS extends GeneralWS {
             @RequestParam String ordering,
             @RequestParam int page,
             @RequestParam int results) throws KallSonysException {
-        return ResponseEntity.ok(customerFacade.findByProductCode(productCode, ordering, page, results));
+        GenericPage<Customer> genericPage = customerFacade.findByProductCode(productCode, ordering, page, results);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
+        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
     }
 
     @GetMapping("/paymentRanking")
@@ -66,6 +72,11 @@ public class CustomerWS extends GeneralWS {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         return ResponseEntity.ok(customerFacade.customersPaymentRankingBetweenDates(start, end));
+    }
+
+    @GetMapping("/findByEmail/{email}")
+    public ResponseEntity findById(@PathVariable("email") @NotBlank String email) throws KallSonysException {
+        return ResponseEntity.ok(customerFacade.findByEmail(email));
     }
 
 

@@ -1,12 +1,19 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CustomerPayment {
 
+    @JsonProperty("Customer")
     private Customer customer;
+
+    @JsonProperty("Date")
     private LocalDate date;
+
+    @JsonProperty("Price")
     private BigDecimal price;
 
     public Customer getCustomer() {

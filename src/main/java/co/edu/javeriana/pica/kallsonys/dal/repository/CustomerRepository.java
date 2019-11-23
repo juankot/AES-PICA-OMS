@@ -1,6 +1,7 @@
 package co.edu.javeriana.pica.kallsonys.dal.repository;
 
 import co.edu.javeriana.pica.kallsonys.dal.entity.Customer;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.Query;
@@ -18,12 +19,11 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
             @Param("identificationCardType") String identificationCardType,
             @Param("identificationCard") String identificationCard);
 
-    @Query(value = "SELECT DISTINCT C.* from ITEM I " +
-            "INNER JOIN KS_ORDER O ON I.ORDER_ID = O.ID " +
-            "INNER JOIN CUSTOMER C ON O.CUSTOMER_ID = C.ID " +
-            "WHERE I.PRODUCT_CODE = :productCode",
-            nativeQuery = true)
-    List<Customer> findByProductCode(@Param("productCode")  String productCode, Pageable pageable);
+    @Query("select distinct C from customer C " +
+            "inner join ks_order O on C.id = O.customer.id " +
+            "inner join item I on I.order.id = O.id " +
+            "where I.productCode = :productCode")
+    Page<Customer> findByProductCode(@Param("productCode") String productCode, Pageable pageable);
 
     @Query(value = "SELECT c.ID, o.ORDER_DATE, sum(o.PRICE) AS PRICE FROM KS_ORDER O " +
             "INNER JOIN CUSTOMER C ON O.CUSTOMER_ID = C.ID " +
@@ -35,6 +35,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
             @Param("startDate") LocalDate startDate,
             @Param("endDate")LocalDate endDate);
 
-//    Customer findCustomerByEmail(String email);
+    Customer findCustomerByEmail(String email);
 
 }

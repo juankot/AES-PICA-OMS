@@ -3,6 +3,7 @@ package co.edu.javeriana.pica.kallsonys.facade;
 import co.edu.javeriana.pica.kallsonys.business.CustomerBusiness;
 import co.edu.javeriana.pica.kallsonys.dto.Customer;
 import co.edu.javeriana.pica.kallsonys.dto.CustomerPayment;
+import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,12 +40,16 @@ public class CustomerFacade {
                 identificationCard);
     }
 
-    public List<Customer> findByProductCode(String productCode, String ordering, int page, int results) throws KallSonysException {
+    public GenericPage<Customer> findByProductCode(String productCode, String ordering, int page, int results) throws KallSonysException {
         return customerBusiness.findByProductCode(productCode, ordering, page, results);
     }
 
     public List<CustomerPayment> customersPaymentRankingBetweenDates(LocalDate startDate, LocalDate endDate) {
         return customerBusiness.customersPaymentRankingBetweenDates(startDate, endDate);
+    }
+
+    public Customer findByEmail(String email) throws KallSonysException {
+        return customerBusiness.findByEmail(email);
     }
 
 }

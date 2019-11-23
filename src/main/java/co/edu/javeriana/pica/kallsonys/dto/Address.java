@@ -1,39 +1,36 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class Address {
 
-    private Long id;
-
     @NotNull(message = "La dirección es obligatoria")
     @NotBlank(message = "La dirección es obligatoria")
+    @JsonProperty("Street")
     private String street;
 
     @NotNull(message = "El código ZIP es obligatorio")
     @NotBlank(message = "El código ZIP es obligatorio")
+    @JsonProperty("Zip")
     private String zip;
 
     @NotNull(message = "La localidad es obligatoria")
     @NotBlank(message = "La localidad es obligatoria")
+    @JsonProperty("State")
     private String state;
 
     @NotNull(message = "La ciudad es obligatoria")
     @NotBlank(message = "La ciudad es obligatoria")
+    @JsonProperty("City")
     private String city;
 
     @NotNull(message = "El código del país es obligatorio")
     @NotBlank(message = "El código del país es obligatorio")
+    @JsonProperty("CountryCode")
     private String countryCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getStreet() {
         return street;

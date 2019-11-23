@@ -2,12 +2,14 @@ package co.edu.javeriana.pica.kallsonys.business;
 
 import co.edu.javeriana.pica.kallsonys.dal.repository.CountryRepository;
 import co.edu.javeriana.pica.kallsonys.dal.repository.CustomerRepository;
+import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
 import co.edu.javeriana.pica.kallsonys.dto.MonthlyOrderReport;
 import co.edu.javeriana.pica.kallsonys.enums.OrderStatusEnum;
 import co.edu.javeriana.pica.kallsonys.dal.entity.*;
 import co.edu.javeriana.pica.kallsonys.dal.repository.OrderRepository;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -88,13 +90,23 @@ public class OrderBusiness {
         return orderEntityToOrderDTO(orderOptional.get());
     }
 
-    public List<co.edu.javeriana.pica.kallsonys.dto.Order> findOrdersByProductCode(String productCode)
-            throws KallSonysException {
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> findOrdersByProductCode(
+            String productCode, String ordering, int page, int results) throws KallSonysException {
         if (productCode == null || productCode.isEmpty()) {
             throw new KallSonysException("El Código del Producto es requerido.");
         }
+        Sort sort = null;
+        if (ordering == null || ordering.isEmpty() || ordering.toUpperCase().equals("ASC")
+                || !ordering.toUpperCase().equals("DESC")) {
+            sort = Sort.by("id").ascending();
+        } else {
+            sort = Sort.by("id").descending();
+        }
+        Pageable sortedPageable = PageRequest.of(page, results, sort);
 
-        return orderEntityListToOrderDTOList(orderRepository.findOrdersByProductCode(productCode));
+        Page<Order> pageElements = orderRepository.findOrdersByProductCode(productCode, sortedPageable);
+        return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
+
     }
 
     public MonthlyOrderReport findMonthlyReportByMonthAndStatus(Integer year, Integer month, Integer statusId) throws KallSonysException {
@@ -111,7 +123,7 @@ public class OrderBusiness {
         return monthlyOrderReport;
     }
 
-    public List<co.edu.javeriana.pica.kallsonys.dto.Order> findAllByStatusAndOrderedByDate(
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> findAllByStatusAndOrderedByDate(
             Integer statusId, String ordering, int page, int results) {
 
         Sort sort = null;
@@ -122,10 +134,11 @@ public class OrderBusiness {
             sort = Sort.by("date").descending();
         }
         Pageable sortedByDate = PageRequest.of(page, results, sort);
-        return orderEntityListToOrderDTOList(orderRepository.findAllByStatusId(statusId, sortedByDate));
+        Page<Order> pageElements = orderRepository.findAllByStatusId(statusId, sortedByDate);
+        return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
     }
 
-    public List<co.edu.javeriana.pica.kallsonys.dto.Order> ordersPaymentRankingByStatusBetweenDates(
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> ordersPaymentRankingByStatusBetweenDates(
             Integer statusId, LocalDate startDate, LocalDate endDate, String ordering, int page, int results) {
         Sort sort = null;
         if (ordering == null || ordering.isEmpty() || ordering.toUpperCase().equals("ASC")
@@ -135,8 +148,23 @@ public class OrderBusiness {
             sort = Sort.by("price").descending();
         }
         Pageable sortedByPrice = PageRequest.of(page, results, sort);
-        return orderEntityListToOrderDTOList(
-                orderRepository.findByStatusIdAndDateBetween(statusId, startDate, endDate, sortedByPrice));
+        Page<Order> pageElements =
+                orderRepository.findByStatusIdAndDateBetween(statusId, startDate, endDate, sortedByPrice);
+        return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
+    }
+
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> findByCustomerId(
+            Long customerId, String ordering, int page, int results) {
+        Sort sort = null;
+        if (ordering == null || ordering.isEmpty() || ordering.toUpperCase().equals("ASC")
+                || !ordering.toUpperCase().equals("DESC")) {
+            sort = Sort.by("id").ascending();
+        } else {
+            sort = Sort.by("id").descending();
+        }
+        Pageable sortedPageable = PageRequest.of(page, results, sort);
+        Page<Order> pageElements = orderRepository.findAllByCustomerId(customerId, sortedPageable);
+        return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
     }
 
     private co.edu.javeriana.pica.kallsonys.dto.Order orderEntityToOrderDTO(Order order) {
@@ -155,7 +183,6 @@ public class OrderBusiness {
         orderDTO.setItems(new ArrayList<>());
         for (Item item : order.getItems()) {
             co.edu.javeriana.pica.kallsonys.dto.Item itemDTO = new co.edu.javeriana.pica.kallsonys.dto.Item();
-            itemDTO.setId(item.getId());
             itemDTO.setPrice(item.getPrice());
             itemDTO.setQuantity(item.getQuantity());
             itemDTO.setProductCode(item.getProductCode());

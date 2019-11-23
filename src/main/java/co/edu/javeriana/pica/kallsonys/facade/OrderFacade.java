@@ -1,6 +1,7 @@
 package co.edu.javeriana.pica.kallsonys.facade;
 
 import co.edu.javeriana.pica.kallsonys.business.OrderBusiness;
+import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
 import co.edu.javeriana.pica.kallsonys.dto.MonthlyOrderReport;
 import co.edu.javeriana.pica.kallsonys.dto.Order;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
@@ -24,8 +25,9 @@ public class OrderFacade {
         return orderBusiness.findById(id);
     }
 
-    public List<Order> findOrdersByProductCode(String productCode) throws KallSonysException {
-        return orderBusiness.findOrdersByProductCode(productCode);
+    public GenericPage<Order> findOrdersByProductCode(
+            String productCode, String ordering, int page, int results) throws KallSonysException {
+        return orderBusiness.findOrdersByProductCode(productCode, ordering, page, results);
     }
 
     public MonthlyOrderReport findMonthlyReportByMonthAndStatus(Integer year, Integer month, Integer statusId)
@@ -33,13 +35,17 @@ public class OrderFacade {
         return orderBusiness.findMonthlyReportByMonthAndStatus(year, month, statusId);
     }
 
-    public List<Order> findAllByStatusAndOrderedByDate(Integer statusId, String ordering, int page, int results) {
+    public GenericPage<Order> findAllByStatusAndOrderedByDate(Integer statusId, String ordering, int page, int results) {
         return orderBusiness.findAllByStatusAndOrderedByDate(statusId, ordering, page, results);
     }
 
-    public List<Order> ordersPaymentRankingByStatusBetweenDates(
+    public GenericPage<Order> ordersPaymentRankingByStatusBetweenDates(
             Integer statusId, LocalDate startDate, LocalDate endDate, String ordering, int page, int results) {
         return orderBusiness.ordersPaymentRankingByStatusBetweenDates(
                 statusId, startDate, endDate, ordering, page, results);
+    }
+
+    public GenericPage<Order> findByCustomerId(Long customerId, String ordering, int page, int results) {
+        return orderBusiness.findByCustomerId(customerId, ordering, page, results);
     }
 }
