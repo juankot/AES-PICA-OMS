@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 @Entity(name = "item")
 @Table(
         indexes = {
-                @Index(name = "item_prod_code_idx", columnList = "product_code"),
+                @Index(name = "item_prod_id_idx", columnList = "product_id"),
                 @Index(name = "item_order_idx", columnList = "order_id")
         }
 )
@@ -23,8 +23,8 @@ public class Item {
     @Column(nullable = false, precision = 5)
     private Integer quantity;
 
-    @Column(name = "product_code", nullable = false, length = 22)
-    private String productCode;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
@@ -58,12 +58,12 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Order getOrder() {

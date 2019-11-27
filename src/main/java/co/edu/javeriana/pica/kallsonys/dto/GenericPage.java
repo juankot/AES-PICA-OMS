@@ -1,10 +1,14 @@
 package co.edu.javeriana.pica.kallsonys.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class GenericPage<T> {
 
+    @JsonProperty("Elements")
     private List<T> list;
+    @JsonProperty("Total")
     private long totalElements;
 
     public GenericPage(List<T> list, long totalElements) {

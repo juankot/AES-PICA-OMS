@@ -135,9 +135,9 @@ public class CustomerBusiness {
         return customerEntityToCustomerDTO(customer);
     }
 
-    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Customer> findByProductCode(
-            String productCode, String ordering, int page, int results) throws KallSonysException {
-        if (productCode == null || productCode.isEmpty()) {
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Customer> findByProductId(
+            Long productId, String ordering, int page, int results) throws KallSonysException {
+        if (productId == null) {
             throw new KallSonysException("El código del producto es obligatorio.");
         }
 
@@ -151,7 +151,7 @@ public class CustomerBusiness {
         Pageable sortedByIdentCardType = PageRequest.of(page, results, sort);
 
         List<co.edu.javeriana.pica.kallsonys.dto.Customer> customerDTOs = new ArrayList<>();
-        Page<Customer> pageElements = customerRepository.findByProductCode(productCode, sortedByIdentCardType);
+        Page<Customer> pageElements = customerRepository.findByProductId(productId, sortedByIdentCardType);
         for (Customer customer : pageElements.toList()) {
             customerDTOs.add(customerEntityToCustomerDTO(customer));
         }

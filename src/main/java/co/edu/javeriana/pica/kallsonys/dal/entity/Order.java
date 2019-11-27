@@ -57,6 +57,22 @@ public class Order {
     @Column(name = "status_date")
     private LocalDate statusDate;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "inventory_prov_id",
+            nullable = true,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "ks_order_inv_prov_fk"))
+    private InventoryProvider inventoryProvider;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "courier_prov_id",
+            nullable = true,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "ks_order_cour_prov_fk"))
+    private CourierProvider courierProvider;
+
     public Long getId() {
         return id;
     }
@@ -127,5 +143,21 @@ public class Order {
 
     public void setStatusDate(LocalDate statusDate) {
         this.statusDate = statusDate;
+    }
+
+    public InventoryProvider getInventoryProvider() {
+        return inventoryProvider;
+    }
+
+    public void setInventoryProvider(InventoryProvider inventoryProvider) {
+        this.inventoryProvider = inventoryProvider;
+    }
+
+    public CourierProvider getCourierProvider() {
+        return courierProvider;
+    }
+
+    public void setCourierProvider(CourierProvider courierProvider) {
+        this.courierProvider = courierProvider;
     }
 }

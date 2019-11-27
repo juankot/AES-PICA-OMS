@@ -3,7 +3,6 @@ package co.edu.javeriana.pica.kallsonys.dal.repository;
 import co.edu.javeriana.pica.kallsonys.dal.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -22,8 +21,8 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
     @Query("select distinct C from customer C " +
             "inner join ks_order O on C.id = O.customer.id " +
             "inner join item I on I.order.id = O.id " +
-            "where I.productCode = :productCode")
-    Page<Customer> findByProductCode(@Param("productCode") String productCode, Pageable pageable);
+            "where I.productId = :productId")
+    Page<Customer> findByProductId(@Param("productId") Long productId, Pageable pageable);
 
     @Query(value = "SELECT c.ID, o.ORDER_DATE, sum(o.PRICE) AS PRICE FROM KS_ORDER O " +
             "INNER JOIN CUSTOMER C ON O.CUSTOMER_ID = C.ID " +

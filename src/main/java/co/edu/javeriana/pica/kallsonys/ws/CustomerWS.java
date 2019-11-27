@@ -7,7 +7,6 @@ import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.CustomerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,16 +54,14 @@ public class CustomerWS extends GeneralWS {
                 identificationCard));
     }
 
-    @GetMapping("/findByProductCode/{productCode}")
+    @GetMapping("/findByProductId/{productId}")
     public ResponseEntity findByProductCode(
-            @PathVariable("productCode") @NotBlank String productCode,
+            @PathVariable("productId") @NotBlank Long productId,
             @RequestParam String ordering,
             @RequestParam int page,
             @RequestParam int results) throws KallSonysException {
-        GenericPage<Customer> genericPage = customerFacade.findByProductCode(productCode, ordering, page, results);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
-        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
+        GenericPage<Customer> genericPage = customerFacade.findByProductId(productId, ordering, page, results);
+        return ResponseEntity.ok(genericPage);
     }
 
     @GetMapping("/paymentRanking")

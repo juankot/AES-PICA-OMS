@@ -18,3 +18,10 @@ insert into orders.COUNTRY (CODE, NAME) VALUES ('COL', 'Colombia');
 insert into orders.COUNTRY (CODE, NAME) VALUES ('PER', 'Perú');
 insert into orders.COUNTRY (CODE, NAME) VALUES ('CHL', 'Chile');
 insert into orders.COUNTRY (CODE, NAME) VALUES ('MEX', 'México');
+
+insert into orders.INVENTORY_PROVIDER (ID, NAME) VALUES (1, 'SONY');
+insert into orders.INVENTORY_PROVIDER (ID, NAME) VALUES (2, 'RapidService');
+
+insert into orders.COURIER_PROVIDER (ID, NAME) VALUES (1, 'DEPRISA');
+insert into orders.COURIER_PROVIDER (ID, NAME) VALUES (2, 'SERVIENTREGA');
+insert into orders.COURIER_PROVIDER (ID, NAME) VALUES (3, 'DHL');

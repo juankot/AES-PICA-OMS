@@ -16,8 +16,8 @@ public class Item {
     private Integer quantity;
 
     @NotNull(message = "El código de producto del ítem es obligatorio")
-    @JsonProperty("ProductCode")
-    private String productCode;
+    @JsonProperty("ProductId")
+    private Long productId;
 
     public BigDecimal getPrice() {
         return price;
@@ -35,11 +35,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

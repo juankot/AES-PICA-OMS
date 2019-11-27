@@ -1,7 +1,6 @@
 package co.edu.javeriana.pica.kallsonys.ws;
 
-import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
-import co.edu.javeriana.pica.kallsonys.dto.Order;
+import co.edu.javeriana.pica.kallsonys.dto.*;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.OrderFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @RestController
@@ -31,16 +31,14 @@ public class OrderWS extends GeneralWS {
         return ResponseEntity.ok(orderFacade.findById(id));
     }
 
-    @GetMapping("/findByProductCode/{productCode}")
-    public ResponseEntity findOrdersByProductCode(
-            @PathVariable("productCode") String productCode,
+    @GetMapping("/findByProductId/{productId}")
+    public ResponseEntity findOrdersByProductId(
+            @PathVariable("productId") Long productId,
             @RequestParam String ordering,
             @RequestParam int page,
             @RequestParam int results) throws KallSonysException {
-        GenericPage<Order> genericPage = orderFacade.findOrdersByProductCode(productCode, ordering, page, results);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
-        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
+        GenericPage<Order> genericPage = orderFacade.findOrdersByProductId(productId, ordering, page, results);
+        return ResponseEntity.ok(genericPage);
     }
 
     @GetMapping("/monthlyReportByStatus/{year}/{month}/{statusId}")
@@ -58,9 +56,7 @@ public class OrderWS extends GeneralWS {
             @RequestParam int page,
             @RequestParam int results) {
         GenericPage<Order> genericPage = orderFacade.findAllByStatusAndOrderedByDate(statusId, ordering, page, results);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
-        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
+        return ResponseEntity.ok(genericPage);
     }
 
     @GetMapping("/paymentRanking/{statusId}")
@@ -73,9 +69,7 @@ public class OrderWS extends GeneralWS {
             @RequestParam int results) {
         GenericPage<Order> genericPage =
                 orderFacade.ordersPaymentRankingByStatusBetweenDates(statusId, start, end, ordering, page, results);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
-        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
+        return ResponseEntity.ok(genericPage);
     }
 
     @GetMapping("/findByCustomerId/{customerId}")
@@ -85,9 +79,38 @@ public class OrderWS extends GeneralWS {
             @RequestParam int page,
             @RequestParam int results) {
         GenericPage<Order> genericPage = orderFacade.findByCustomerId(customerId, ordering, page, results);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Total-Count", String.valueOf(genericPage.getTotalElements()));
-        return ResponseEntity.ok().headers(responseHeaders).body(genericPage.getList());
+        return ResponseEntity.ok(genericPage);
+    }
+
+    @PutMapping(path = "/updateStatus/{id}")
+    public ResponseEntity updateStatus(
+            @PathVariable("id") @NotBlank Long id,
+            @Valid @RequestBody Status orderStatus) throws KallSonysException {
+        orderFacade.updateStatus(id, orderStatus.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/setInventoryProvider/{id}")
+    public ResponseEntity setInventoryProvider(
+            @PathVariable("id") @NotBlank Long id,
+            @Valid @RequestBody Provider provider) throws KallSonysException {
+        orderFacade.setInventoryProvider(id, provider.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/setCourierProvider/{id}")
+    public ResponseEntity setCourierProvider(
+            @PathVariable("id") @NotBlank Long id,
+            @Valid @RequestBody Provider provider) throws KallSonysException {
+        orderFacade.setCourierProvider(id, provider.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/sellingProductRanking")
+    public ResponseEntity sellingProductRanking(
+            @RequestParam @NotBlank @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @NotBlank @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        return ResponseEntity.ok(orderFacade.sellingProductRanking(startDate, endDate));
     }
 
 }

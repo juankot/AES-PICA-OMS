@@ -1,12 +1,12 @@
 package co.edu.javeriana.pica.kallsonys.business;
 
-import co.edu.javeriana.pica.kallsonys.dal.repository.CountryRepository;
-import co.edu.javeriana.pica.kallsonys.dal.repository.CustomerRepository;
+import co.edu.javeriana.pica.kallsonys.dal.repository.*;
 import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
 import co.edu.javeriana.pica.kallsonys.dto.MonthlyOrderReport;
+import co.edu.javeriana.pica.kallsonys.dto.ProductRanking;
+import co.edu.javeriana.pica.kallsonys.dto.Provider;
 import co.edu.javeriana.pica.kallsonys.enums.OrderStatusEnum;
 import co.edu.javeriana.pica.kallsonys.dal.entity.*;
-import co.edu.javeriana.pica.kallsonys.dal.repository.OrderRepository;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +32,15 @@ public class OrderBusiness {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    StatusRepository statusRepository;
+
+    @Autowired
+    InventoryProviderRepository inventoryProviderRepository;
+
+    @Autowired
+    CourierProviderRepository courierProviderRepository;
 
     public Long createOrder(co.edu.javeriana.pica.kallsonys.dto.Order orderDTO) throws KallSonysException {
         Optional<Country> countryOptional =
@@ -70,7 +79,7 @@ public class OrderBusiness {
             Item item = new Item();
             item.setPrice(itemDTO.getPrice());
             item.setQuantity(itemDTO.getQuantity());
-            item.setProductCode(itemDTO.getProductCode());
+            item.setProductId(itemDTO.getProductId());
             item.setOrder(order);
             order.getItems().add(item);
 
@@ -90,9 +99,9 @@ public class OrderBusiness {
         return orderEntityToOrderDTO(orderOptional.get());
     }
 
-    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> findOrdersByProductCode(
-            String productCode, String ordering, int page, int results) throws KallSonysException {
-        if (productCode == null || productCode.isEmpty()) {
+    public GenericPage<co.edu.javeriana.pica.kallsonys.dto.Order> findOrdersByProductId(
+            Long productId, String ordering, int page, int results) throws KallSonysException {
+        if (productId == null) {
             throw new KallSonysException("El Código del Producto es requerido.");
         }
         Sort sort = null;
@@ -104,7 +113,7 @@ public class OrderBusiness {
         }
         Pageable sortedPageable = PageRequest.of(page, results, sort);
 
-        Page<Order> pageElements = orderRepository.findOrdersByProductCode(productCode, sortedPageable);
+        Page<Order> pageElements = orderRepository.findOrdersByProductId(productId, sortedPageable);
         return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
 
     }
@@ -167,6 +176,67 @@ public class OrderBusiness {
         return new GenericPage(orderEntityListToOrderDTOList(pageElements.toList()), pageElements.getTotalElements());
     }
 
+    public void updateStatus(Long orderId, Integer statusId) throws KallSonysException {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (!orderOptional.isPresent()) {
+            throw new KallSonysException("La Orden no existe.");
+        }
+
+        Optional<Status> statusOptional = statusRepository.findById(statusId);
+        if (!statusOptional.isPresent()) {
+            throw new KallSonysException("El estado no existe.");
+        }
+
+        Order order = orderOptional.get();
+        if (!order.getStatus().getId().equals(statusOptional.get().getId())) {
+            order.setStatus(statusOptional.get());
+            order.setStatusDate(LocalDate.now());
+            orderRepository.save(order);
+        }
+    }
+
+    public void setInventoryProvider(Long orderId, Integer inventoryProviderId) throws KallSonysException {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (!orderOptional.isPresent()) {
+            throw new KallSonysException("La Orden no existe.");
+        }
+
+        Optional<InventoryProvider> inventoryProviderOptional = inventoryProviderRepository.findById(inventoryProviderId);
+        if (!inventoryProviderOptional.isPresent()) {
+            throw new KallSonysException("Proveedor no existe.");
+        }
+
+        Order order = orderOptional.get();
+        order.setInventoryProvider(inventoryProviderOptional.get());
+    }
+
+    public void setCourierProvider(Long orderId, Integer courierProviderId) throws KallSonysException {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (!orderOptional.isPresent()) {
+            throw new KallSonysException("La Orden no existe.");
+        }
+
+        Optional<CourierProvider> courierProviderOptional = courierProviderRepository.findById(courierProviderId);
+        if (!courierProviderOptional.isPresent()) {
+            throw new KallSonysException("Proveedor no existe.");
+        }
+
+        Order order = orderOptional.get();
+        order.setCourierProvider(courierProviderOptional.get());
+    }
+
+    public List<ProductRanking> sellingProductRanking(LocalDate startDate, LocalDate endDate) {
+        List<Object[]> products = orderRepository.sellingProductRanking(startDate, endDate);
+        List<co.edu.javeriana.pica.kallsonys.dto.ProductRanking> list = new ArrayList<>();
+        for (Object[] product : products) {
+            list.add(
+                    new ProductRanking(
+                            ((BigDecimal)product[0]).longValue(),
+                            ((BigDecimal)product[1]).intValue()));
+        }
+        return list;
+    }
+
     private co.edu.javeriana.pica.kallsonys.dto.Order orderEntityToOrderDTO(Order order) {
         co.edu.javeriana.pica.kallsonys.dto.Order orderDTO = new co.edu.javeriana.pica.kallsonys.dto.Order();
         orderDTO.setId(order.getId());
@@ -185,13 +255,24 @@ public class OrderBusiness {
             co.edu.javeriana.pica.kallsonys.dto.Item itemDTO = new co.edu.javeriana.pica.kallsonys.dto.Item();
             itemDTO.setPrice(item.getPrice());
             itemDTO.setQuantity(item.getQuantity());
-            itemDTO.setProductCode(item.getProductCode());
+            itemDTO.setProductId(item.getProductId());
             orderDTO.getItems().add(itemDTO);
         }
         orderDTO.setStatus(new co.edu.javeriana.pica.kallsonys.dto.Status());
         orderDTO.getStatus().setId(order.getStatus().getId());
         orderDTO.getStatus().setName(order.getStatus().getName());
         orderDTO.getStatus().setDate(order.getDate());
+        if (order.getInventoryProvider() != null) {
+            orderDTO.setInventoryProvider(new Provider());
+            orderDTO.getInventoryProvider().setId(order.getInventoryProvider().getId());
+            orderDTO.getInventoryProvider().setName(order.getInventoryProvider().getName());
+        }
+
+        if (order.getCourierProvider() != null) {
+            orderDTO.setCourierProvider(new Provider());
+            orderDTO.getCourierProvider().setId(order.getCourierProvider().getId());
+            orderDTO.getCourierProvider().setName(order.getCourierProvider().getName());
+        }
 
         return orderDTO;
     }

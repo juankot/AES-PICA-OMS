@@ -36,6 +36,12 @@ public class Order {
     @JsonProperty("Status")
     private Status status;
 
+    @JsonProperty("InventoryProvider")
+    private Provider inventoryProvider;
+
+    @JsonProperty("CourierProvider")
+    private Provider courierProvider;
+
     public Long getId() {
         return id;
     }
@@ -98,5 +104,21 @@ public class Order {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Provider getInventoryProvider() {
+        return inventoryProvider;
+    }
+
+    public void setInventoryProvider(Provider inventoryProvider) {
+        this.inventoryProvider = inventoryProvider;
+    }
+
+    public Provider getCourierProvider() {
+        return courierProvider;
+    }
+
+    public void setCourierProvider(Provider courierProvider) {
+        this.courierProvider = courierProvider;
     }
 }

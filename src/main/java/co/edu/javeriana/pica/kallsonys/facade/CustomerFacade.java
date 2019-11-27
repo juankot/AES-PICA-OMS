@@ -40,8 +40,8 @@ public class CustomerFacade {
                 identificationCard);
     }
 
-    public GenericPage<Customer> findByProductCode(String productCode, String ordering, int page, int results) throws KallSonysException {
-        return customerBusiness.findByProductCode(productCode, ordering, page, results);
+    public GenericPage<Customer> findByProductId(Long productId, String ordering, int page, int results) throws KallSonysException {
+        return customerBusiness.findByProductId(productId, ordering, page, results);
     }
 
     public List<CustomerPayment> customersPaymentRankingBetweenDates(LocalDate startDate, LocalDate endDate) {
