@@ -51,6 +51,9 @@ public class Customer {
     @JsonProperty("Type")
     private Type type;
 
+    @JsonProperty("Password")
+    private String password;
+
     public Long getId() {
         return id;
     }
@@ -113,5 +116,13 @@ public class Customer {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

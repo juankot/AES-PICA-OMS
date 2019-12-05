@@ -58,7 +58,7 @@ public class OrderFacade {
         orderBusiness.setInventoryProvider(orderId, inventoryProviderId);
     }
 
-    public void setCourierProvider(Long orderId, Integer courierProviderId) throws KallSonysException {
+    public void setCourierProvider(Long orderId, Integer courierProviderId) throws KallSonysException, Exception {
         orderBusiness.setCourierProvider(orderId, courierProviderId);
     }
 

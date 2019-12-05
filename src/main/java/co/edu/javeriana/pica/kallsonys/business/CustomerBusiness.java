@@ -3,7 +3,6 @@ package co.edu.javeriana.pica.kallsonys.business;
 import co.edu.javeriana.pica.kallsonys.dal.entity.Customer;
 import co.edu.javeriana.pica.kallsonys.dal.entity.CustomerType;
 import co.edu.javeriana.pica.kallsonys.dal.entity.IdentificationCardType;
-import co.edu.javeriana.pica.kallsonys.dal.entity.Order;
 import co.edu.javeriana.pica.kallsonys.dal.repository.CustomerRepository;
 import co.edu.javeriana.pica.kallsonys.dal.repository.CustomerTypeRepository;
 import co.edu.javeriana.pica.kallsonys.dal.repository.IdentificationCardTypeRepository;

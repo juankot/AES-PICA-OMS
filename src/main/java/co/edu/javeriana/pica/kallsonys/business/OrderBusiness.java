@@ -1,10 +1,12 @@
 package co.edu.javeriana.pica.kallsonys.business;
 
+import co.edu.javeriana.pica.kallsonys.dal.entity.Address;
+import co.edu.javeriana.pica.kallsonys.dal.entity.Customer;
+import co.edu.javeriana.pica.kallsonys.dal.entity.Item;
+import co.edu.javeriana.pica.kallsonys.dal.entity.Order;
+import co.edu.javeriana.pica.kallsonys.dal.entity.Status;
 import co.edu.javeriana.pica.kallsonys.dal.repository.*;
-import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
-import co.edu.javeriana.pica.kallsonys.dto.MonthlyOrderReport;
-import co.edu.javeriana.pica.kallsonys.dto.ProductRanking;
-import co.edu.javeriana.pica.kallsonys.dto.Provider;
+import co.edu.javeriana.pica.kallsonys.dto.*;
 import co.edu.javeriana.pica.kallsonys.enums.OrderStatusEnum;
 import co.edu.javeriana.pica.kallsonys.dal.entity.*;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
@@ -17,9 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class OrderBusiness {
@@ -208,9 +208,10 @@ public class OrderBusiness {
 
         Order order = orderOptional.get();
         order.setInventoryProvider(inventoryProviderOptional.get());
+        orderRepository.save(order);
     }
 
-    public void setCourierProvider(Long orderId, Integer courierProviderId) throws KallSonysException {
+    public void setCourierProvider(Long orderId, Integer courierProviderId) throws KallSonysException, Exception {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (!orderOptional.isPresent()) {
             throw new KallSonysException("La Orden no existe.");
@@ -223,6 +224,8 @@ public class OrderBusiness {
 
         Order order = orderOptional.get();
         order.setCourierProvider(courierProviderOptional.get());
+
+        orderRepository.save(order);
     }
 
     public List<ProductRanking> sellingProductRanking(LocalDate startDate, LocalDate endDate) {

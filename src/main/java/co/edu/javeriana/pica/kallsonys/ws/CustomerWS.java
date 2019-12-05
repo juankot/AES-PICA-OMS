@@ -1,14 +1,13 @@
 package co.edu.javeriana.pica.kallsonys.ws;
 
-import co.edu.javeriana.pica.kallsonys.dto.Customer;
-import co.edu.javeriana.pica.kallsonys.dto.GenericPage;
-import co.edu.javeriana.pica.kallsonys.dto.Type;
+import co.edu.javeriana.pica.kallsonys.dto.*;
 import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.CustomerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -22,9 +21,32 @@ public class CustomerWS extends GeneralWS {
     @Autowired
     CustomerFacade customerFacade;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody Customer customer) throws KallSonysException {
-        return ResponseEntity.ok(customerFacade.createCustomer(customer));
+    public ResponseEntity create(@Valid @RequestBody Customer customer) throws KallSonysException, Exception {
+//        Properties wsProps = new Properties();
+//        wsProps.load(new FileInputStream(Thread.currentThread().getContextClassLoader().getResource("").getPath() + "services.properties"));
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//        User user = new User();
+//        user.setEmail(customer.getEmail());
+//        user.setPassword(customer.getPassword());
+//        HttpEntity<User> entityUser = new HttpEntity<User>(user, httpHeaders);
+//        try {
+//            UserResponse userResponse = restTemplate.exchange(wsProps.getProperty("ws.brokered_auth"), HttpMethod.POST, entityUser, UserResponse.class).getBody();
+//            if (userResponse.isResult()) {
+                return ResponseEntity.ok(new CreateResponse(customerFacade.createCustomer(customer)));
+//            } else {
+//                throw new Exception(userResponse.getMessage());
+//            }
+//        } catch (HttpClientErrorException e) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            JsonNode actualObj = mapper.readTree(e.getResponseBodyAsString());
+//            throw new Exception(actualObj.get("message").textValue());
+//        }
     }
 
     @PutMapping(path = "/{id}")

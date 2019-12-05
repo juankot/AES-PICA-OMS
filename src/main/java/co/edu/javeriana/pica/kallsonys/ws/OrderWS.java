@@ -5,7 +5,6 @@ import co.edu.javeriana.pica.kallsonys.exceptions.KallSonysException;
 import co.edu.javeriana.pica.kallsonys.facade.OrderFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class OrderWS extends GeneralWS {
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody Order order) throws KallSonysException {
-        return ResponseEntity.ok(orderFacade.createOrder(order));
+        return ResponseEntity.ok(new CreateResponse(orderFacade.createOrder(order)));
     }
 
     @GetMapping("/{id}")
@@ -101,7 +100,7 @@ public class OrderWS extends GeneralWS {
     @PutMapping(path = "/setCourierProvider/{id}")
     public ResponseEntity setCourierProvider(
             @PathVariable("id") @NotBlank Long id,
-            @Valid @RequestBody Provider provider) throws KallSonysException {
+            @Valid @RequestBody Provider provider) throws KallSonysException, Exception {
         orderFacade.setCourierProvider(id, provider.getId());
         return ResponseEntity.ok().build();
     }
